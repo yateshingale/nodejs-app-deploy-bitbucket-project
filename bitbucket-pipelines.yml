@@ -1,0 +1,23 @@
+image: node:18
+
+pipelines:
+  branches:
+    develop:
+      - step:
+          name: Deploy to AWS EC2 (Ubuntu)
+          caches:
+            - node
+          script:
+            
+            - apt-get update && apt-get install -y openssh-client
+            
+           
+            - echo "$PRIVATE_SSH_KEY" > nodejs-key.pem
+            - chmod 600 nodejs-key.pem
+
+            
+            - ssh -o StrictHostKeyChecking=no -i nodejs-key.pem ubuntu@34.205.144.238"
+                cd /home/ubuntu/nodejs-app &&
+                git pull origin develop &&
+                npm install &&
+                pm2 restart node-app"
